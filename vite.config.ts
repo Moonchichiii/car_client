@@ -7,7 +7,7 @@ import checker from 'vite-plugin-checker';
 export default defineConfig({
   plugins: [
     react(),
-    tailwindcss(),
+    ...tailwindcss(), // Use spread operator since tailwindcss returns an array
     tsconfigPaths(),
     checker({ typescript: true }),
   ],
@@ -28,7 +28,7 @@ export default defineConfig({
           proxy.on('error', (err, _req, _res) => {
             console.log('proxy error', err);
           });
-          proxy.on('proxyReq', (proxyReq, req, _res) => {
+          proxy.on('proxyReq', (_proxyReq, req, _res) => {
             console.log('Sending Request:', req.method, req.url);
           });
           proxy.on('proxyRes', (proxyRes, req, _res) => {

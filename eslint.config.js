@@ -1,4 +1,3 @@
-// eslint.config.js
 import js from '@eslint/js';
 import tsParser from '@typescript-eslint/parser';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
@@ -69,8 +68,8 @@ export default [
       }],
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'jsx-a11y/label-has-associated-control': ['error', { assert: 'either' }],
-      'react/react-in-jsx-scope': 'off', // Not needed in React 17+
-      'react/prop-types': 'off', // TypeScript handles this
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off',
       'react/no-unescaped-entities': ['error', {
         forbid: [{ char: '>', alternatives: ['&gt;'] }],
       }],
