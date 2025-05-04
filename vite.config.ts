@@ -1,17 +1,21 @@
-// vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import tailwindcss from '@tailwindcss/vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
+import checker from 'vite-plugin-checker';
+import eslintPlugin from '@nabla/vite-plugin-eslint';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
-    tailwindcss()
+    tailwindcss(),
+    tsconfigPaths(),
+    checker({ typescript: true }),
+    eslintPlugin(),
   ],
   resolve: {
     alias: {
-      '@': '/src', // Use absolute path instead of path.resolve
+      '@': '/src',
     },
   },
   server: {
@@ -19,7 +23,7 @@ export default defineConfig({
       // Proxy API requests to the Django backend during development
       '/api': {
         target: 'http://localhost:8000',
-        changeOrigin: true, 
+        changeOrigin: true,
         secure: false,
         rewrite: (path) => path,
         configure: (proxy, _options) => {
