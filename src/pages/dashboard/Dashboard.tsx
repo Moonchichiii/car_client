@@ -41,25 +41,19 @@ const Dashboard: React.FC = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
           <div className="px-4 py-5 sm:px-6">
-           <h2 className="text-lg font-medium text-gray-900">
-   Welcome, {
-     user.first_name
-     || (user.email ?? '').split('@')[0]
-     || 'User'
-   }!
- </h2>
-            <p className="mt-1 max-w-2xl text-sm text-gray-500">
-              What would you like to do today?
-            </p>
+            <h2 className="text-lg font-medium text-gray-900">
+              Welcome, {user.first_name || (user.email ?? '').split('@')[0] || 'User'}!
+            </h2>
+            <p className="mt-1 max-w-2xl text-sm text-gray-500">What would you like to do today?</p>
           </div>
-          
+
           <div className="border-t border-gray-200 px-4 py-5 sm:p-6">
             <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
               <div>
                 <dt className="text-sm font-medium text-gray-500">Account Email</dt>
                 <dd className="mt-1 text-sm text-gray-900">{user.email}</dd>
               </div>
-              
+
               <div>
                 <dt className="text-sm font-medium text-gray-500">Account Status</dt>
                 <dd className="mt-1 text-sm text-gray-900">
@@ -76,23 +70,30 @@ const Dashboard: React.FC = () => {
               </div>
             </dl>
           </div>
-          
+
           <div className="border-t border-gray-200 px-4 py-5 sm:p-6">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <div className="bg-blue-50 p-4 rounded-lg shadow-sm hover:shadow transition">
                 <h3 className="text-md font-medium text-blue-800">Car Rentals</h3>
-                <p className="mt-2 text-sm text-blue-600">Browse and rent cars for your next trip</p>
+                <p className="mt-2 text-sm text-blue-600">
+                  Browse and rent cars for your next trip
+                </p>
               </div>
-              
+
               <div className="bg-green-50 p-4 rounded-lg shadow-sm hover:shadow transition">
                 <h3 className="text-md font-medium text-green-800">My Reservations</h3>
-                <p className="mt-2 text-sm text-green-600">View your current and upcoming bookings</p>
+                <p className="mt-2 text-sm text-green-600">
+                  View your current and upcoming bookings
+                </p>
               </div>
-              
-              <div className="bg-purple-50 p-4 rounded-lg shadow-sm hover:shadow transition" onClick={() => navigate('/settings')}>
+
+              <button
+                className="bg-purple-50 p-4 rounded-lg shadow-sm hover:shadow transition w-full text-left"
+                onClick={() => navigate('/settings')}
+              >
                 <h3 className="text-md font-medium text-purple-800">Account Settings</h3>
                 <p className="mt-2 text-sm text-purple-600">Update your profile and preferences</p>
-              </div>
+              </button>
             </div>
           </div>
         </div>

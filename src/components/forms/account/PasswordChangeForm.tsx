@@ -3,14 +3,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAccount } from '@/features/account/hooks';
 
-const passwordSchema = z.object({
-  old_password: z.string().min(1, 'Current password is required'),
-  new_password1: z.string().min(8, 'Password must be at least 8 characters'),
-  new_password2: z.string().min(1, 'Please confirm your password'),
-}).refine((data) => data.new_password1 === data.new_password2, {
-  message: 'Passwords do not match',
-  path: ['new_password2'],
-});
+const passwordSchema = z
+  .object({
+    old_password: z.string().min(1, 'Current password is required'),
+    new_password1: z.string().min(8, 'Password must be at least 8 characters'),
+    new_password2: z.string().min(1, 'Please confirm your password'),
+  })
+  .refine((data) => data.new_password1 === data.new_password2, {
+    message: 'Passwords do not match',
+    path: ['new_password2'],
+  });
 
 type PasswordFormData = z.infer<typeof passwordSchema>;
 
@@ -19,17 +21,14 @@ interface PasswordChangeFormProps {
   onCancel?: () => void;
 }
 
-const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({ 
-  onSuccess, 
-  onCancel 
-}) => {
+const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({ onSuccess, onCancel }) => {
   const { changePassword, isChangingPassword } = useAccount();
-  
-  const { 
-    register, 
-    handleSubmit, 
-    formState: { errors }, 
-    reset 
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
   } = useForm<PasswordFormData>({
     resolver: zodResolver(passwordSchema),
   });
@@ -39,7 +38,7 @@ const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({
       onSuccess: () => {
         reset();
         if (onSuccess) onSuccess();
-      }
+      },
     });
   };
 

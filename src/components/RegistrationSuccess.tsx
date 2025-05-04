@@ -6,9 +6,9 @@ interface RegistrationSuccessProps {
   email: string;
 }
 
-const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({ 
-  isVerificationEnabled, 
-  email 
+const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({
+  isVerificationEnabled,
+  email,
 }) => {
   const navigate = useNavigate();
 
@@ -17,26 +17,24 @@ const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({
       <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-md">
         <div className="text-center mb-6">
           <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              className="h-10 w-10 text-green-600" 
-              fill="none" 
-              viewBox="0 0 24 24" 
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-10 w-10 text-green-600"
+              fill="none"
+              viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M5 13l4 4L19 7" 
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
               />
             </svg>
           </div>
-          <h2 className="mt-4 text-2xl font-bold text-gray-800">
-            Registration Successful!
-          </h2>
+          <h2 className="mt-4 text-2xl font-bold text-gray-800">Registration Successful!</h2>
         </div>
-        
+
         {isVerificationEnabled ? (
           <div className="space-y-4">
             <p className="text-center text-gray-600">
@@ -45,8 +43,8 @@ const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({
             <p className="text-center font-medium">{email}</p>
             <div className="bg-blue-50 p-4 rounded-md">
               <p className="text-blue-800 text-sm">
-                Please check your inbox and click the verification link to activate your account. 
-                If you don't see the email, check your spam folder.
+                Please check your inbox and click the verification link to activate your account. If
+                you don't see the email, check your spam folder.
               </p>
             </div>
           </div>
@@ -55,7 +53,7 @@ const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({
             Your account has been created successfully. You can now start using our services!
           </p>
         )}
-        
+
         <div className="mt-8 flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
           <button
             onClick={() => navigate('/signin')}

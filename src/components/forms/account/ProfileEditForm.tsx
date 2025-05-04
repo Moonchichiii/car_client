@@ -6,8 +6,16 @@ import { useAccount } from '@/features/account/hooks';
 import { User } from '@/types/auth';
 
 const profileEditSchema = z.object({
-  first_name: z.string().min(2, 'First name must be at least 2 characters').optional().or(z.literal('')),
-  last_name: z.string().min(2, 'Last name must be at least 2 characters').optional().or(z.literal('')),
+  first_name: z
+    .string()
+    .min(2, 'First name must be at least 2 characters')
+    .optional()
+    .or(z.literal('')),
+  last_name: z
+    .string()
+    .min(2, 'Last name must be at least 2 characters')
+    .optional()
+    .or(z.literal('')),
   country: z.string().optional().or(z.literal('')),
 });
 
@@ -19,25 +27,21 @@ interface ProfileEditFormProps {
   onCancel?: () => void;
 }
 
-const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ 
-  user, 
-  onSuccess, 
-  onCancel 
-}) => {
+const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ user, onSuccess, onCancel }) => {
   const { updateProfile, isUpdatingProfile } = useAccount();
-  
-  const { 
-    register, 
-    handleSubmit, 
-    formState: { errors, isDirty }, 
-    reset 
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isDirty },
+    reset,
   } = useForm<ProfileEditFormData>({
     resolver: zodResolver(profileEditSchema),
     defaultValues: {
       first_name: user.first_name || '',
       last_name: user.last_name || '',
       country: user.country || '',
-    }
+    },
   });
 
   const onSubmit = (data: ProfileEditFormData) => {
@@ -47,21 +51,21 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
     }
 
     const changedData: Partial<ProfileEditFormData> = {};
-    
+
     if (data.first_name !== user.first_name) changedData.first_name = data.first_name;
     if (data.last_name !== user.last_name) changedData.last_name = data.last_name;
     if (data.country !== user.country) changedData.country = data.country;
-    
+
     if (Object.keys(changedData).length === 0) {
       onCancel?.();
       return;
     }
-    
+
     updateProfile(changedData, {
       onSuccess: () => {
         reset({ ...data });
         if (onSuccess) onSuccess();
-      }
+      },
     });
   };
 
@@ -138,12 +142,8 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
           </button>
         )}
       </div>
-      
-      {!isDirty && (
-        <p className="text-xs text-gray-400">
-          Make changes to update your profile.
-        </p>
-      )}
+
+      {!isDirty && <p className="text-xs text-gray-400">Make changes to update your profile.</p>}
     </form>
   );
 };

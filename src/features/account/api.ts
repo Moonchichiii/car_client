@@ -35,38 +35,30 @@ export interface MarketingPreferences {
 
 export const accountApi = {
   // Profile functions - Fix path to include /api prefix
-  updateProfile: (data: Partial<UserProfileData>) =>
-    apiClient.patch('/auth/profile/', data),
- 
+  updateProfile: (data: Partial<UserProfileData>) => apiClient.patch('/auth/profile/', data),
+
   // Password management
-  changePassword: (data: PasswordChangeData) =>
-    apiClient.post('/auth/password/change/', data),
- 
-  resetPassword: (email: string) =>
-    apiClient.post('/api/auth/password/reset/', { email }),
- 
+  changePassword: (data: PasswordChangeData) => apiClient.post('/auth/password/change/', data),
+
+  resetPassword: (email: string) => apiClient.post('/api/auth/password/reset/', { email }),
+
   // Email management - Fix path to include /api prefix
-  changeEmail: (data: EmailChangeData) =>
-    apiClient.patch('/auth/profile/', data),
- 
+  changeEmail: (data: EmailChangeData) => apiClient.patch('/auth/profile/', data),
+
   // Account management
-  deleteAccount: (password: string) =>
-    apiClient.post('/auth/delete-account/', { password }),
- 
+  deleteAccount: (password: string) => apiClient.post('/auth/delete-account/', { password }),
+
   // Verification
-  sendEmailVerification: () =>
-    apiClient.post('/auth/registration/resend-email/'),
- 
-  verifyEmail: (key: string) =>
-    apiClient.post('/auth/registration/verify-email/', { key }),
- 
+  sendEmailVerification: () => apiClient.post('/auth/registration/resend-email/'),
+
+  verifyEmail: (key: string) => apiClient.post('/auth/registration/verify-email/', { key }),
+
   // For a custom implementation, you could add phone verification
   sendPhoneVerification: (phone: string) =>
     apiClient.post('/auth/phone/send-verification/', { phone }),
- 
-  verifyPhone: (code: string) =>
-    apiClient.post('/auth/phone/verify/', { code }),
- 
+
+  verifyPhone: (code: string) => apiClient.post('/auth/phone/verify/', { code }),
+
   // Update marketing preferences - Fix path to include /api prefix
   updatePreferences: (preferences: MarketingPreferences) =>
     apiClient.patch('/auth/profile/', preferences),

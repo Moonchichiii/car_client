@@ -56,30 +56,16 @@ const CookieConsent: React.FC = () => {
   const savePreferences = (prefs: CookiePreferences) => {
     localStorage.setItem('cookieConsent', JSON.stringify(prefs));
     setShowBanner(false);
-    
-    // Here you would trigger your cookie management system
-    // to enable/disable cookies based on the preferences
     console.log('Cookie preferences saved:', prefs);
   };
 
   const handleTogglePreference = (key: keyof CookiePreferences) => {
-    if (key === 'necessary') return; // Can't change necessary cookies
-    
-    setPreferences(prev => ({
+    if (key === 'necessary') return;
+
+    setPreferences((prev) => ({
       ...prev,
       [key]: !prev[key],
     }));
-  };
-
-  const resetConsent = () => {
-    localStorage.removeItem('cookieConsent');
-    setShowBanner(true);
-    setPreferences({
-      necessary: true,
-      functional: false,
-      analytics: false,
-      marketing: false,
-    });
   };
 
   if (!showBanner) return null;
@@ -98,7 +84,7 @@ const CookieConsent: React.FC = () => {
               <X className="w-5 h-5" />
             </button>
           </div>
-          
+
           <div className="space-y-4">
             <div className="flex items-center justify-between py-2">
               <div>
@@ -110,6 +96,7 @@ const CookieConsent: React.FC = () => {
                 checked={preferences.necessary}
                 disabled
                 className="w-4 h-4 rounded border-gray-300 bg-gray-100 cursor-not-allowed"
+                aria-label="Necessary cookies (always enabled)"
               />
             </div>
 
@@ -136,7 +123,9 @@ const CookieConsent: React.FC = () => {
             <div className="flex items-center justify-between py-2">
               <div>
                 <h3 className="font-medium text-gray-900">Analytics Cookies</h3>
-                <p className="text-sm text-gray-500">Help us understand how visitors use our site</p>
+                <p className="text-sm text-gray-500">
+                  Help us understand how visitors use our site
+                </p>
               </div>
               <button
                 onClick={() => handleTogglePreference('analytics')}
@@ -195,7 +184,9 @@ const CookieConsent: React.FC = () => {
             <div className="text-gray-700">
               <p className="text-sm sm:text-base">
                 We use cookies to improve your experience and analyze site usage.{' '}
-                <a href="/privacy" className="text-blue-600 hover:underline">Learn more</a>
+                <a href="/privacy" className="text-blue-600 hover:underline">
+                  Learn more
+                </a>
               </p>
             </div>
             <div className="flex gap-4">

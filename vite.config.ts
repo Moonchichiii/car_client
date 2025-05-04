@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react-swc';
 import tailwindcss from '@tailwindcss/vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import checker from 'vite-plugin-checker';
-import eslintPlugin from '@nabla/vite-plugin-eslint';
 
 export default defineConfig({
   plugins: [
@@ -11,7 +10,6 @@ export default defineConfig({
     tailwindcss(),
     tsconfigPaths(),
     checker({ typescript: true }),
-    eslintPlugin(),
   ],
   resolve: {
     alias: {

@@ -8,15 +8,15 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ redirectPath = '/signin' }: ProtectedRouteProps) => {
   const { isAuthenticated, isLoading } = useAuth();
-  
+
   if (isLoading) {
     return <LoadingSpinner size="large" />;
   }
-  
+
   if (!isAuthenticated) {
     return <Navigate to={redirectPath} replace />;
   }
-  
+
   return <Outlet />;
 };
 

@@ -18,11 +18,11 @@ interface DeleteAccountFormProps {
 
 const DeleteAccountForm: React.FC<DeleteAccountFormProps> = ({ onCancel }) => {
   const { deleteAccount, isDeletingAccount } = useAccount();
-  
-  const { 
-    register, 
-    handleSubmit, 
-    formState: { errors } 
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
   } = useForm<DeleteAccountFormData>({
     resolver: zodResolver(deleteAccountSchema),
   });
@@ -37,7 +37,7 @@ const DeleteAccountForm: React.FC<DeleteAccountFormProps> = ({ onCancel }) => {
       <p className="text-gray-300 mb-4">
         This action cannot be undone. All your personal data will be permanently removed.
       </p>
-      
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">

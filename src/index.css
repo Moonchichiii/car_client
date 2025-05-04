@@ -21,7 +21,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {  
+body {
   display: flex;
   place-items: center;
   min-width: 420px;
@@ -54,7 +54,9 @@ button {
   background-color: #1a1a1a;
   color: inherit;
   cursor: pointer;
-  transition: border-color 0.25s, background-color 0.25s;
+  transition:
+    border-color 0.25s,
+    background-color 0.25s;
 }
 button:hover {
   border-color: #646cff;
@@ -74,7 +76,7 @@ button:focus-visible {
     color: #747bff;
   }
   button {
-    background-color: #f9f9f9;  
-   color: #213547;
+    background-color: #f9f9f9;
+    color: #213547;
   }
 }

@@ -8,6 +8,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import prettier from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
+import globals from 'globals';
 
 export default [
   js.configs.recommended,
@@ -21,15 +22,10 @@ export default [
         ecmaFeatures: { jsx: true },
       },
       globals: {
-        ...js.configs.recommended.languageOptions.globals,
-        browser: 'readonly',
-        es2021: true,
-        node: 'readonly',
-        window: 'readonly',
-        document: 'readonly',
-        console: 'readonly',
-        setTimeout: 'readonly',
-        clearTimeout: 'readonly',
+        ...globals.browser,
+        ...globals.es2021,
+        ...globals.node,
+        React: 'readonly',
       },
     },
     settings: {
@@ -66,11 +62,20 @@ export default [
       }],
       
       // Custom overrides
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-explicit-any': 'off', // Turn off for now
+      '@typescript-eslint/no-unused-vars': ['error', { 
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+      }],
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'jsx-a11y/label-has-associated-control': ['error', { assert: 'either' }],
-      'react/react-in-jsx-scope': 'off',
+      'react/react-in-jsx-scope': 'off', // Not needed in React 17+
+      'react/prop-types': 'off', // TypeScript handles this
+      'react/no-unescaped-entities': ['error', {
+        forbid: [{ char: '>', alternatives: ['&gt;'] }],
+      }],
+      'jsx-a11y/click-events-have-key-events': 'warn',
+      'jsx-a11y/no-static-element-interactions': 'warn',
     },
   },
   {

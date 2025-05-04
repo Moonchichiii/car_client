@@ -45,9 +45,6 @@ importers:
       '@eslint/js':
         specifier: ^9.22.0
         version: 9.25.1
-      '@nabla/vite-plugin-eslint':
-        specifier: ^2.0.5
-        version: 2.0.5(eslint@9.25.1(jiti@2.4.2))(vite@6.3.3(@types/node@22.15.3)(jiti@2.4.2)(lightningcss@1.29.2)(yaml@2.7.1))
       '@tailwindcss/postcss':
         specifier: ^4.1.4
         version: 4.1.4
@@ -365,12 +362,6 @@ packages:
   '@humanwhocodes/retry@0.4.2':
     resolution: {integrity: sha512-xeO57FpIu4p1Ri3Jq/EXq4ClRm86dVF2z/+kvFnyqVYRavTZmaFaUBbWCOuuTh0o/g7DSsk6kc2vrS4Vl5oPOQ==}
     engines: {node: '>=18.18'}
-
-  '@nabla/vite-plugin-eslint@2.0.5':
-    resolution: {integrity: sha512-m6Q8ZVM0ASZfYyfFbG661mDklhZQZEeBMQgtB26NhdadxPSctHzHsUbF87msdSb0V4Z8R1p/vRkB5SHNOpANAQ==}
-    peerDependencies:
-      eslint: ^8.45 || ^9
-      vite: ^4 || ^5 || ^6
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2366,16 +2357,6 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.2': {}
 
-  '@nabla/vite-plugin-eslint@2.0.5(eslint@9.25.1(jiti@2.4.2))(vite@6.3.3(@types/node@22.15.3)(jiti@2.4.2)(lightningcss@1.29.2)(yaml@2.7.1))':
-    dependencies:
-      '@types/eslint': 9.6.1
-      chalk: 4.1.2
-      debug: 4.4.0
-      eslint: 9.25.1(jiti@2.4.2)
-      vite: 6.3.3(@types/node@22.15.3)(jiti@2.4.2)(lightningcss@1.29.2)(yaml@2.7.1)
-    transitivePeerDependencies:
-      - supports-color
-
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -2588,6 +2569,7 @@ snapshots:
     dependencies:
       '@types/estree': 1.0.7
       '@types/json-schema': 7.0.15
+    optional: true
 
   '@types/estree@1.0.7': {}
 

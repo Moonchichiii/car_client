@@ -22,38 +22,42 @@ const isAtLeast18YearsOld = (dateString: string): boolean => {
   return age >= 18;
 };
 
-const signUpSchema = z.object({
-  email: z.string().email({ message: 'Invalid email address' }),
-  password1: z.string()
-    .min(8, { message: 'Password must be at least 8 characters long' })
-    .regex(/[A-Z]/, { message: 'Password must contain at least one uppercase letter' })
-    .regex(/[a-z]/, { message: 'Password must contain at least one lowercase letter' })
-    .regex(/[0-9]/, { message: 'Password must contain at least one number' }),
-  password2: z.string().min(1, { message: 'Please confirm your password' }),
-  first_name: z.string().optional(),
-  last_name: z.string().optional(),
-  phone_number: z.string().optional(),
-  address_line1: z.string().optional(),
-  address_line2: z.string().optional(),
-  city: z.string().optional(),
-  postal_code: z.string().optional(),
-  country: z.string().optional(),
-  date_of_birth: z.string()
-    .refine(val => val.length > 0, { message: 'Date of birth is required' })
-    .refine(isAtLeast18YearsOld, { message: 'You must be at least 18 years old to register' }),
-  drivers_license_number: z.string().optional(),
-  drivers_license_expiry: z.string().optional(),
-  accepted_terms: z.literal(true, {
-    errorMap: () => ({ message: 'You must accept the terms and conditions' }),
-  }),
-  accepted_privacy_policy: z.literal(true, {
-    errorMap: () => ({ message: 'You must accept the privacy policy' }),
-  }),
-  marketing_emails: z.boolean().optional(),
-}).refine((data) => data.password1 === data.password2, {
-  message: 'Passwords do not match',
-  path: ['password2'],
-});
+const signUpSchema = z
+  .object({
+    email: z.string().email({ message: 'Invalid email address' }),
+    password1: z
+      .string()
+      .min(8, { message: 'Password must be at least 8 characters long' })
+      .regex(/[A-Z]/, { message: 'Password must contain at least one uppercase letter' })
+      .regex(/[a-z]/, { message: 'Password must contain at least one lowercase letter' })
+      .regex(/[0-9]/, { message: 'Password must contain at least one number' }),
+    password2: z.string().min(1, { message: 'Please confirm your password' }),
+    first_name: z.string().optional(),
+    last_name: z.string().optional(),
+    phone_number: z.string().optional(),
+    address_line1: z.string().optional(),
+    address_line2: z.string().optional(),
+    city: z.string().optional(),
+    postal_code: z.string().optional(),
+    country: z.string().optional(),
+    date_of_birth: z
+      .string()
+      .refine((val) => val.length > 0, { message: 'Date of birth is required' })
+      .refine(isAtLeast18YearsOld, { message: 'You must be at least 18 years old to register' }),
+    drivers_license_number: z.string().optional(),
+    drivers_license_expiry: z.string().optional(),
+    accepted_terms: z.literal(true, {
+      errorMap: () => ({ message: 'You must accept the terms and conditions' }),
+    }),
+    accepted_privacy_policy: z.literal(true, {
+      errorMap: () => ({ message: 'You must accept the privacy policy' }),
+    }),
+    marketing_emails: z.boolean().optional(),
+  })
+  .refine((data) => data.password1 === data.password2, {
+    message: 'Passwords do not match',
+    path: ['password2'],
+  });
 
 type SignUpFormValues = z.infer<typeof signUpSchema>;
 
@@ -68,10 +72,10 @@ const SignUp: React.FC = () => {
     const today = new Date();
     const maxBirthDate = new Date(today);
     maxBirthDate.setFullYear(today.getFullYear() - 18);
-    
+
     const minLicenseExpiryDate = new Date();
     minLicenseExpiryDate.setDate(minLicenseExpiryDate.getDate() + 1);
-    
+
     return {
       maxBirthDate: maxBirthDate.toISOString().split('T')[0],
       minLicenseExpiryDate: minLicenseExpiryDate.toISOString().split('T')[0],
@@ -90,7 +94,10 @@ const SignUp: React.FC = () => {
         const backendErrors = registerError.response.data;
         if (typeof backendErrors === 'object') {
           const errorMessage = Object.entries(backendErrors)
-            .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : String(value)}`)
+            .map(
+              ([key, value]) =>
+                `${key}: ${Array.isArray(value) ? value.join(', ') : String(value)}`,
+            )
             .join('; ');
           setApiError(errorMessage);
           toast.error(errorMessage);
@@ -117,66 +124,66 @@ const SignUp: React.FC = () => {
       marketing_emails: false,
     },
   });
- 
-  
-  const onSubmit: SubmitHandler<SignUpFormValues> = useCallback((data) => {
-    setApiError(null);
 
-    const formData: RegisterFormData = {
-      email: data.email,
-      password1: data.password1,
-      password2: data.password2,
-      first_name: data.first_name,
-      last_name: data.last_name,
-      phone_number: data.phone_number,
-      address_line1: data.address_line1,
-      address_line2: data.address_line2 || null,
-      city: data.city,
-      postal_code: data.postal_code,
-      country: data.country,
-      date_of_birth: data.date_of_birth,
-      drivers_license_number: data.drivers_license_number,
-      drivers_license_expiry: data.drivers_license_expiry,
-      accepted_terms: data.accepted_terms,
-      accepted_privacy_policy: data.accepted_privacy_policy,
-      marketing_emails: data.marketing_emails,
-    };
+  const onSubmit: SubmitHandler<SignUpFormValues> = useCallback(
+    (data) => {
+      setApiError(null);
 
-    registerUser(formData, {
-      onSuccess: () => {
-        toast.success('Account created successfully!');
-        setRegisteredEmail(data.email);
-        setRegistrationComplete(true);
-      },
-      onError: (error) => {
-        if (error instanceof AxiosError) {
-          if (error.response?.data) {
-            const backendErrors = error.response.data;
-            if (typeof backendErrors === 'object') {
-              const errorMessage = Object.entries(backendErrors)
-                .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : String(value)}`)
-                .join('; ');
-              toast.error(errorMessage);
+      const formData: RegisterFormData = {
+        email: data.email,
+        password1: data.password1,
+        password2: data.password2,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        phone_number: data.phone_number,
+        address_line1: data.address_line1,
+        address_line2: data.address_line2 || null,
+        city: data.city,
+        postal_code: data.postal_code,
+        country: data.country,
+        date_of_birth: data.date_of_birth,
+        drivers_license_number: data.drivers_license_number,
+        drivers_license_expiry: data.drivers_license_expiry,
+        accepted_terms: data.accepted_terms,
+        accepted_privacy_policy: data.accepted_privacy_policy,
+        marketing_emails: data.marketing_emails,
+      };
+
+      registerUser(formData, {
+        onSuccess: () => {
+          toast.success('Account created successfully!');
+          setRegisteredEmail(data.email);
+          setRegistrationComplete(true);
+        },
+        onError: (error) => {
+          if (error instanceof AxiosError) {
+            if (error.response?.data) {
+              const backendErrors = error.response.data;
+              if (typeof backendErrors === 'object') {
+                const errorMessage = Object.entries(backendErrors)
+                  .map(
+                    ([key, value]) =>
+                      `${key}: ${Array.isArray(value) ? value.join(', ') : String(value)}`,
+                  )
+                  .join('; ');
+                toast.error(errorMessage);
+              } else {
+                toast.error(String(backendErrors) || 'Registration failed');
+              }
             } else {
-              toast.error(String(backendErrors) || 'Registration failed');
+              toast.error('Registration failed. Please try again.');
             }
           } else {
-            toast.error('Registration failed. Please try again.');
+            toast.error('An unexpected error occurred');
           }
-        } else {
-          toast.error('An unexpected error occurred');
-        }
-      }
-    });
-  }, [registerUser]);
+        },
+      });
+    },
+    [registerUser],
+  );
 
   if (registrationComplete) {
-    return (
-      <RegistrationSuccess
-        isVerificationEnabled={false}
-        email={registeredEmail}
-      />
-    );
+    return <RegistrationSuccess isVerificationEnabled={false} email={registeredEmail} />;
   }
 
   return (
@@ -271,7 +278,10 @@ const SignUp: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="first_name"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   First Name
                 </label>
                 <input
@@ -316,7 +326,10 @@ const SignUp: React.FC = () => {
             </div>
 
             <div className="mt-4">
-              <label htmlFor="date_of_birth" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="date_of_birth"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Date of Birth <span aria-hidden="true">*</span>
               </label>
               <p id="date_of_birth-description" className="mt-1 text-xs text-gray-500">
@@ -332,7 +345,11 @@ const SignUp: React.FC = () => {
                 }`}
                 {...register('date_of_birth')}
                 aria-invalid={errors.date_of_birth ? 'true' : 'false'}
-                aria-describedby={errors.date_of_birth ? 'date_of_birth-error date_of_birth-description' : 'date_of_birth-description'}
+                aria-describedby={
+                  errors.date_of_birth
+                    ? 'date_of_birth-error date_of_birth-description'
+                    : 'date_of_birth-description'
+                }
               />
               {errors.date_of_birth && (
                 <p id="date_of_birth-error" className="mt-1 text-sm text-red-600" role="alert">
@@ -342,7 +359,10 @@ const SignUp: React.FC = () => {
             </div>
 
             <div className="mt-4">
-              <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="phone_number"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Phone Number
               </label>
               <input
@@ -355,7 +375,11 @@ const SignUp: React.FC = () => {
                 {...register('phone_number')}
                 placeholder="+123456789"
                 aria-invalid={errors.phone_number ? 'true' : 'false'}
-                aria-describedby={errors.phone_number ? 'phone_number-error phone_number-description' : 'phone_number-description'}
+                aria-describedby={
+                  errors.phone_number
+                    ? 'phone_number-error phone_number-description'
+                    : 'phone_number-description'
+                }
               />
               <p id="phone_number-description" className="mt-1 text-xs text-gray-500">
                 International format: +123456789
@@ -372,7 +396,10 @@ const SignUp: React.FC = () => {
             <legend className="text-lg font-medium mb-3">Address Information</legend>
 
             <div>
-              <label htmlFor="address_line1" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="address_line1"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Address Line 1
               </label>
               <input
@@ -394,7 +421,10 @@ const SignUp: React.FC = () => {
             </div>
 
             <div className="mt-4">
-              <label htmlFor="address_line2" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="address_line2"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Address Line 2
               </label>
               <input
@@ -439,7 +469,10 @@ const SignUp: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="postal_code" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="postal_code"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   Postal Code
                 </label>
                 <input
@@ -489,7 +522,10 @@ const SignUp: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="drivers_license_number" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="drivers_license_number"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   Driver's License Number
                 </label>
                 <input
@@ -500,17 +536,26 @@ const SignUp: React.FC = () => {
                   }`}
                   {...register('drivers_license_number')}
                   aria-invalid={errors.drivers_license_number ? 'true' : 'false'}
-                  aria-describedby={errors.drivers_license_number ? 'drivers_license_number-error' : undefined}
+                  aria-describedby={
+                    errors.drivers_license_number ? 'drivers_license_number-error' : undefined
+                  }
                 />
                 {errors.drivers_license_number && (
-                  <p id="drivers_license_number-error" className="mt-1 text-sm text-red-600" role="alert">
+                  <p
+                    id="drivers_license_number-error"
+                    className="mt-1 text-sm text-red-600"
+                    role="alert"
+                  >
                     {errors.drivers_license_number.message}
                   </p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="drivers_license_expiry" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="drivers_license_expiry"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   License Expiry Date
                 </label>
                 <input
@@ -522,13 +567,21 @@ const SignUp: React.FC = () => {
                   }`}
                   {...register('drivers_license_expiry')}
                   aria-invalid={errors.drivers_license_expiry ? 'true' : 'false'}
-                  aria-describedby={errors.drivers_license_expiry ? 'drivers_license_expiry-error drivers_license_expiry-description' : 'drivers_license_expiry-description'}
+                  aria-describedby={
+                    errors.drivers_license_expiry
+                      ? 'drivers_license_expiry-error drivers_license_expiry-description'
+                      : 'drivers_license_expiry-description'
+                  }
                 />
                 <p id="drivers_license_expiry-description" className="mt-1 text-xs text-gray-500">
                   Your license must not be expired
                 </p>
                 {errors.drivers_license_expiry && (
-                  <p id="drivers_license_expiry-error" className="mt-1 text-sm text-red-600" role="alert">
+                  <p
+                    id="drivers_license_expiry-error"
+                    className="mt-1 text-sm text-red-600"
+                    role="alert"
+                  >
                     {errors.drivers_license_expiry.message}
                   </p>
                 )}
@@ -541,16 +594,25 @@ const SignUp: React.FC = () => {
               <div className="flex items-center h-5">
                 <input
                   id="accepted_terms"
-                   type="checkbox"
-                   className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                   {...register('accepted_terms')}
-                   aria-invalid={errors.accepted_terms ? 'true' : 'false'}
-                   aria-describedby={errors.accepted_terms ? 'accepted_terms-error' : undefined}
-                 />
-               </div>
+                  type="checkbox"
+                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  {...register('accepted_terms')}
+                  aria-invalid={errors.accepted_terms ? 'true' : 'false'}
+                  aria-describedby={errors.accepted_terms ? 'accepted_terms-error' : undefined}
+                />
+              </div>
               <div className="ml-3">
                 <label htmlFor="accepted_terms" className="text-sm text-gray-700">
-                  I accept the <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Terms and Conditions</a> <span aria-hidden="true">*</span>
+                  I accept the{' '}
+                  <a
+                    href="/terms"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    Terms and Conditions
+                  </a>{' '}
+                  <span aria-hidden="true">*</span>
                 </label>
                 {errors.accepted_terms && (
                   <p id="accepted_terms-error" className="mt-1 text-sm text-red-600" role="alert">
@@ -564,19 +626,34 @@ const SignUp: React.FC = () => {
               <div className="flex items-center h-5">
                 <input
                   id="accepted_privacy_policy"
-                   type="checkbox"
-                   className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                   {...register('accepted_privacy_policy')}
-                   aria-invalid={errors.accepted_privacy_policy ? 'true' : 'false'}
-                   aria-describedby={errors.accepted_privacy_policy ? 'accepted_privacy_policy-error' : undefined}
-                 />
-               </div>
+                  type="checkbox"
+                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  {...register('accepted_privacy_policy')}
+                  aria-invalid={errors.accepted_privacy_policy ? 'true' : 'false'}
+                  aria-describedby={
+                    errors.accepted_privacy_policy ? 'accepted_privacy_policy-error' : undefined
+                  }
+                />
+              </div>
               <div className="ml-3">
                 <label htmlFor="accepted_privacy_policy" className="text-sm text-gray-700">
-                  I accept the <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Privacy Policy</a> <span aria-hidden="true">*</span>
+                  I accept the{' '}
+                  <a
+                    href="/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    Privacy Policy
+                  </a>{' '}
+                  <span aria-hidden="true">*</span>
                 </label>
                 {errors.accepted_privacy_policy && (
-                  <p id="accepted_privacy_policy-error" className="mt-1 text-sm text-red-600" role="alert">
+                  <p
+                    id="accepted_privacy_policy-error"
+                    className="mt-1 text-sm text-red-600"
+                    role="alert"
+                  >
                     {errors.accepted_privacy_policy.message}
                   </p>
                 )}
@@ -587,13 +664,13 @@ const SignUp: React.FC = () => {
               <div className="flex items-center h-5">
                 <input
                   id="marketing_emails"
-                   type="checkbox"
-                   className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                   {...register('marketing_emails')}
-                   aria-invalid={errors.marketing_emails ? 'true' : 'false'}
-                   aria-describedby={errors.marketing_emails ? 'marketing_emails-error' : undefined}
-                 />
-               </div>
+                  type="checkbox"
+                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  {...register('marketing_emails')}
+                  aria-invalid={errors.marketing_emails ? 'true' : 'false'}
+                  aria-describedby={errors.marketing_emails ? 'marketing_emails-error' : undefined}
+                />
+              </div>
               <div className="ml-3">
                 <label htmlFor="marketing_emails" className="text-sm text-gray-700">
                   I would like to receive marketing emails
@@ -607,20 +684,23 @@ const SignUp: React.FC = () => {
             </div>
           </div>
 
-           <button
-             type="submit"
-             disabled={isRegistering}
-             aria-busy={isRegistering}
-             className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-           >
-             {isRegistering ? 'Creating Account...' : 'Create Account'}
+          <button
+            type="submit"
+            disabled={isRegistering}
+            aria-busy={isRegistering}
+            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+          >
+            {isRegistering ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
         <nav aria-label="Authentication navigation" className="mt-4 text-center">
           <p className="text-sm text-gray-600">
             Already have an account?{' '}
-            <a href="/signin" className="text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-sm">
+            <a
+              href="/signin"
+              className="text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-sm"
+            >
               Sign in
             </a>
           </p>

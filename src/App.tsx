@@ -13,7 +13,6 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import queryClient from '@/api/queryClient';
 import { useAuth } from '@/hooks/useAuth';
 
-
 function IdleHandler({ children }: { children: React.ReactNode }) {
   const { signOut } = useAuth();
 
@@ -35,7 +34,6 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <IdleHandler>
-        
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -48,12 +46,9 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Router>
-        
       </IdleHandler>
       <ToastContainer position="top-right" autoClose={5000} />
-      
     </QueryClientProvider>
-    
   );
 }
 

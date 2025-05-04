@@ -5,7 +5,7 @@ import { USER_QUERY_KEY } from '@/hooks/useAuth';
 
 export const useAccount = () => {
   const queryClient = useQueryClient();
-  
+
   // Change password mutation
   const passwordChangeMutation = useMutation({
     mutationFn: accountApi.changePassword,
@@ -26,13 +26,13 @@ export const useAccount = () => {
       } else {
         toast.error('Password change failed');
       }
-    }
+    },
   });
 
   // Email change mutation
   const emailChangeMutation = useMutation({
     mutationFn: accountApi.changeEmail,
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       toast.success('Email changed successfully');
       // Update the user data in the cache
       queryClient.invalidateQueries({ queryKey: USER_QUERY_KEY });
@@ -51,16 +51,16 @@ export const useAccount = () => {
       } else {
         toast.error('Email change failed');
       }
-    }
+    },
   });
 
   // Profile update mutation
   const profileUpdateMutation = useMutation({
     mutationFn: accountApi.updateProfile,
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       toast.success('Profile updated successfully');
       // Update the user data in the cache
-      queryClient.setQueryData(USER_QUERY_KEY, data);
+      queryClient.setQueryData(USER_QUERY_KEY, _data);
     },
     onError: (error: any) => {
       if (error.response?.data) {
@@ -76,7 +76,7 @@ export const useAccount = () => {
       } else {
         toast.error('Profile update failed');
       }
-    }
+    },
   });
 
   // Account deletion mutation
@@ -103,7 +103,7 @@ export const useAccount = () => {
       } else {
         toast.error('Account deletion failed');
       }
-    }
+    },
   });
 
   // Email verification mutation
@@ -114,7 +114,7 @@ export const useAccount = () => {
     },
     onError: () => {
       toast.error('Failed to send verification email. Please try again later.');
-    }
+    },
   });
 
   // Phone verification mutation
@@ -125,7 +125,7 @@ export const useAccount = () => {
     },
     onError: () => {
       toast.error('Failed to send verification code. Please try again later.');
-    }
+    },
   });
 
   // Marketing preferences mutation
@@ -138,29 +138,29 @@ export const useAccount = () => {
     },
     onError: () => {
       toast.error('Failed to update preferences');
-    }
+    },
   });
 
   return {
     // Mutations
     changePassword: passwordChangeMutation.mutate,
     isChangingPassword: passwordChangeMutation.isPending,
-    
+
     changeEmail: emailChangeMutation.mutate,
     isChangingEmail: emailChangeMutation.isPending,
-    
+
     updateProfile: profileUpdateMutation.mutate,
     isUpdatingProfile: profileUpdateMutation.isPending,
-    
+
     deleteAccount: deleteAccountMutation.mutate,
     isDeletingAccount: deleteAccountMutation.isPending,
-    
+
     sendVerificationEmail: sendVerificationEmailMutation.mutate,
     isSendingVerificationEmail: sendVerificationEmailMutation.isPending,
-    
+
     sendPhoneVerification: sendPhoneVerificationMutation.mutate,
     isSendingPhoneVerification: sendPhoneVerificationMutation.isPending,
-    
+
     updatePreferences: updatePreferencesMutation.mutate,
     isUpdatingPreferences: updatePreferencesMutation.isPending,
   };

@@ -11,11 +11,7 @@ import { useAccount } from './hooks';
 
 const Settings: React.FC = () => {
   const { user } = useAuth();
-  const {
-    sendVerificationEmail,
-    sendPhoneVerification,
-    updatePreferences
-  } = useAccount();
+  const { sendVerificationEmail, sendPhoneVerification, updatePreferences } = useAccount();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('profile');
   const [formStates, setFormStates] = useState({
@@ -27,10 +23,13 @@ const Settings: React.FC = () => {
 
   const showForm = (form: keyof typeof formStates) => {
     setFormStates({
-      ...Object.keys(formStates).reduce((acc, key) => {
-        acc[key as keyof typeof formStates] = false;
-        return acc;
-      }, {} as typeof formStates),
+      ...Object.keys(formStates).reduce(
+        (acc, key) => {
+          acc[key as keyof typeof formStates] = false;
+          return acc;
+        },
+        {} as typeof formStates,
+      ),
       [form]: true,
     });
   };
@@ -83,10 +82,11 @@ const Settings: React.FC = () => {
           <div className="border-b border-gray-700">
             <nav className="-mb-px flex">
               <button
-                className={`${activeTab === 'profile'
+                className={`${
+                  activeTab === 'profile'
                     ? 'border-blue-500 text-blue-400'
                     : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-400'
-                  } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
+                } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
                 onClick={() => {
                   setActiveTab('profile');
                   hideAllForms();
@@ -95,10 +95,11 @@ const Settings: React.FC = () => {
                 Profile
               </button>
               <button
-                className={`${activeTab === 'security'
+                className={`${
+                  activeTab === 'security'
                     ? 'border-blue-500 text-blue-400'
                     : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-400'
-                  } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
+                } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
                 onClick={() => {
                   setActiveTab('security');
                   hideAllForms();
@@ -107,10 +108,11 @@ const Settings: React.FC = () => {
                 Security
               </button>
               <button
-                className={`${activeTab === 'advanced'
+                className={`${
+                  activeTab === 'advanced'
                     ? 'border-blue-500 text-blue-400'
                     : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-400'
-                  } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
+                } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
                 onClick={() => {
                   setActiveTab('advanced');
                   hideAllForms();
@@ -130,7 +132,11 @@ const Settings: React.FC = () => {
                 <div>
                   <dt className="text-sm font-medium text-gray-400">Full name</dt>
                   <dd className="mt-1 text-sm text-white flex justify-between">
-                    <span>{user.first_name && user.last_name ? `${user.first_name} ${user.last_name}` : "Not provided"}</span>
+                    <span>
+                      {user.first_name && user.last_name
+                        ? `${user.first_name} ${user.last_name}`
+                        : 'Not provided'}
+                    </span>
                     {formStates.editingProfile ? (
                       <button
                         className="text-red-400 hover:text-red-300 text-xs"
@@ -184,7 +190,7 @@ const Settings: React.FC = () => {
                 <div>
                   <dt className="text-sm font-medium text-gray-400">Phone number</dt>
                   <dd className="mt-1 text-sm text-white flex justify-between">
-                    <span>{user.phone_number ? "••••••••••" : "Not provided"}</span>
+                    <span>{user.phone_number ? '••••••••••' : 'Not provided'}</span>
                     <button
                       className="text-blue-400 hover:text-blue-300 text-xs"
                       onClick={() => toast.info('Phone update feature is coming soon!')}
@@ -197,7 +203,7 @@ const Settings: React.FC = () => {
                 <div>
                   <dt className="text-sm font-medium text-gray-400">Date of birth</dt>
                   <dd className="mt-1 text-sm text-white flex justify-between">
-                    <span>{user.date_of_birth ? "••/••/••••" : "Not provided"}</span>
+                    <span>{user.date_of_birth ? '••/••/••••' : 'Not provided'}</span>
                     <button
                       className="text-blue-400 hover:text-blue-300 text-xs"
                       onClick={() => toast.info('Date of birth update feature is coming soon!')}
@@ -212,11 +218,7 @@ const Settings: React.FC = () => {
               {formStates.editingProfile && (
                 <div className="mt-4 p-4 bg-gray-700 rounded sm:col-span-2">
                   <h3 className="text-sm font-medium text-gray-300 mb-4">Edit Profile</h3>
-                  <ProfileEditForm
-                    user={user}
-                    onSuccess={hideAllForms}
-                    onCancel={hideAllForms}
-                  />
+                  <ProfileEditForm user={user} onSuccess={hideAllForms} onCancel={hideAllForms} />
                 </div>
               )}
               {/* End Added ProfileEditForm section */}
@@ -226,13 +228,7 @@ const Settings: React.FC = () => {
                 <div className="sm:col-span-2">
                   <dt className="text-sm font-medium text-gray-400">Address</dt>
                   <dd className="mt-1 text-sm text-white flex justify-between">
-                    <span>
-                      {user.country ? (
-                        <>••••••••••, {user.country}</>
-                      ) : (
-                        "Not provided"
-                      )}
-                    </span>
+                    <span>{user.country ? <>••••••••••, {user.country}</> : 'Not provided'}</span>
                     <button
                       className="text-blue-400 hover:text-blue-300 text-xs"
                       onClick={() => toast.info('Address update feature is coming soon!')}
@@ -272,10 +268,7 @@ const Settings: React.FC = () => {
                   </dd>
                   {formStates.editingPassword && (
                     <div className="mt-4 p-4 bg-gray-700 rounded">
-                      <PasswordChangeForm
-                        onSuccess={hideAllForms}
-                        onCancel={hideAllForms}
-                      />
+                      <PasswordChangeForm onSuccess={hideAllForms} onCancel={hideAllForms} />
                     </div>
                   )}
                 </div>
@@ -340,7 +333,7 @@ const Settings: React.FC = () => {
                           )}
                         </>
                       ) : (
-                        "Not provided"
+                        'Not provided'
                       )}
                     </span>
                     <button
@@ -355,7 +348,7 @@ const Settings: React.FC = () => {
                 <div className="sm:col-span-2 mt-2">
                   <dt className="text-sm font-medium text-gray-400">Last login</dt>
                   <dd className="mt-1 text-sm text-white">
-                    {user.last_login ? new Date(user.last_login).toLocaleString() : "Unknown"}
+                    {user.last_login ? new Date(user.last_login).toLocaleString() : 'Unknown'}
                     {user.last_login_ip && (
                       <span className="ml-2 text-xs text-gray-400">
                         from IP: {user.last_login_ip}

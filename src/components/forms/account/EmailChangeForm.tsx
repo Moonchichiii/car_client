@@ -17,23 +17,19 @@ interface EmailChangeFormProps {
   onCancel?: () => void;
 }
 
-const EmailChangeForm: React.FC<EmailChangeFormProps> = ({ 
-  currentEmail, 
-  onSuccess, 
-  onCancel 
-}) => {
+const EmailChangeForm: React.FC<EmailChangeFormProps> = ({ currentEmail, onSuccess, onCancel }) => {
   const { changeEmail, isChangingEmail } = useAccount();
-  
-  const { 
-    register, 
-    handleSubmit, 
-    formState: { errors }, 
-    watch 
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
   } = useForm<EmailChangeFormData>({
     resolver: zodResolver(emailChangeSchema),
     defaultValues: {
       email: currentEmail,
-    }
+    },
   });
 
   const newEmail = watch('email');
@@ -41,11 +37,11 @@ const EmailChangeForm: React.FC<EmailChangeFormProps> = ({
 
   const onSubmit = (data: EmailChangeFormData) => {
     if (!emailChanged) return;
-    
+
     changeEmail(data, {
       onSuccess: () => {
         if (onSuccess) onSuccess();
-      }
+      },
     });
   };
 
@@ -103,11 +99,9 @@ const EmailChangeForm: React.FC<EmailChangeFormProps> = ({
           </button>
         )}
       </div>
-      
+
       {!emailChanged && (
-        <p className="text-xs text-gray-400">
-          Enter a different email address to make changes.
-        </p>
+        <p className="text-xs text-gray-400">Enter a different email address to make changes.</p>
       )}
     </form>
   );
