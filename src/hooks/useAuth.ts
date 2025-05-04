@@ -1,4 +1,3 @@
-// src/hooks/useAuth.ts
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import type { Nullable, User, LoginCredentials, RegisterFormData } from '@/types/auth';
@@ -7,12 +6,10 @@ import { AxiosError } from 'axios';
 
 export const USER_QUERY_KEY = ['auth', 'user'];
 
-/** Returns true if we have an "auth" or "refresh" JWT cookie */
 function hasAuthToken(): boolean {
   return /(?:^|;\s*)(auth|refresh)=/.test(document.cookie);
 }
 
-// GET /auth/user/ → User or null on 401/403
 async function fetchCurrentUser(): Promise<Nullable<User>> {
   try {
     const { data } = await apiClient.get<User>('/auth/user/');
@@ -28,17 +25,14 @@ async function fetchCurrentUser(): Promise<Nullable<User>> {
   }
 }
 
-// POST /auth/login/
 async function loginUser(creds: LoginCredentials): Promise<void> {
   await apiClient.post('/auth/login/', creds);
 }
 
-// POST /auth/registration/
 async function registerUser(data: RegisterFormData): Promise<void> {
   await apiClient.post('/auth/registration/', data);
 }
 
-// POST /auth/logout/
 async function logoutUser(): Promise<void> {
   await apiClient.post('/auth/logout/');
 }
@@ -46,7 +40,6 @@ async function logoutUser(): Promise<void> {
 export function useAuth() {
   const qc = useQueryClient();
 
-  // 1) initial fetch (only if token present)
   const {
     data: user,
     isLoading: isUserLoading,
@@ -60,7 +53,6 @@ export function useAuth() {
     refetchOnWindowFocus: false,
   });
 
-  // 2) login → refetch
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: () => {
@@ -68,7 +60,6 @@ export function useAuth() {
     },
   });
 
-  // 3) register → refetch
   const registerMutation = useMutation({
     mutationFn: registerUser,
     onSuccess: () => {
@@ -76,7 +67,6 @@ export function useAuth() {
     },
   });
 
-  // 4) logout → clear cache
   const logoutMutation = useMutation({
     mutationFn: logoutUser,
     onSuccess: () => {
@@ -84,7 +74,6 @@ export function useAuth() {
     },
   });
 
-  // 5) idle‐timer: auto sign out after 10m inactivity
   useEffect(() => {
     if (!user) return;
     const TIMEOUT = 10 * 60 * 1000;
@@ -108,30 +97,19 @@ export function useAuth() {
   }, [user, logoutMutation]);
 
   return {
-    // current user
     user,
     isAuthenticated: Boolean(user),
     isLoading: isUserLoading || loginMutation.isPending || registerMutation.isPending,
-
-    // any fetch error
     fetchError,
-
-    // sign in
     login: loginMutation.mutate,
     isLoggingIn: loginMutation.isPending,
     loginError: loginMutation.error,
-
-    // sign up
     register: registerMutation.mutate,
     isRegistering: registerMutation.isPending,
     registerError: registerMutation.error,
-
-    // sign out single method
     signOut: logoutMutation.mutate,
     isLoggingOut: logoutMutation.isPending,
     signOutError: logoutMutation.error,
-
-    // manual refetch (for idle handler or on‐demand)
     refreshUser: refetch,
   };
 }
